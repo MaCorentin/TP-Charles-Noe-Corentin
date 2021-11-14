@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,12 @@ class NoteController
         Note::create([
             "note" => $request->cnote,
             "ArticleID" => $request->nid,
+            "UserID" => Auth::user()->id
+        ]);
+
+        Log::create([
+            "name" => "AJOUT NOTE",
+            "text" => "Ajout : ".$request->cnote."à l'article n°".$request->nid,
             "UserID" => Auth::user()->id
         ]);
 

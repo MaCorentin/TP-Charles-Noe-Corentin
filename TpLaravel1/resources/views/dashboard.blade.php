@@ -1,12 +1,3 @@
-<?php
-
-
-    $user = Auth::user();
-    $IsAdmin = Auth::user()->IsAdmin;
-    $id = Auth::id();
-
-?>
-
 
 <x-app-layout>
     <x-slot name="header">
@@ -16,7 +7,7 @@
     </x-slot>
     <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand" href="#page-top">Tp De BRICE</a>
+            <a class="navbar-brand" href="{{route("dashboard")}}">Tp De BRICE</a>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
                     <form method="POST" action="{{ route('logout') }}">
@@ -28,12 +19,12 @@
                                 {{ __('Déconnexion') }}
                             </a></li>
                     </form>
-                    <?php if ($IsAdmin == 1): ?>
+                    <?php if (Auth::user()->IsAdmin == 1): ?>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">Admin</a></li>
                     <?php endif; ?>
 
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#categorie">categorie</a></li>
-                    <?php if ($IsAdmin == 0): ?>
+                    <?php if (Auth::user()->IsAdmin == 0): ?>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">Contact</a></li>
                     <?php endif; ?>
                 </ul>
@@ -48,7 +39,7 @@
             <!-- Masthead Avatar Image-->
             <img class="masthead-avatar mb-5" src="assets/img/avataaars.svg" alt="..." />
             <!-- Masthead Heading-->
-            <h1 class="masthead-heading text-uppercase mb-0">Bonjour <?php echo $user->name;?> !</h1>
+            <h1 class="masthead-heading text-uppercase mb-0">Bonjour <?php echo Auth::user()->name;?> !</h1>
             <!-- Icon Divider-->
             <div class="divider-custom divider-light">
                 <div class="divider-custom-line"></div>
@@ -74,66 +65,25 @@
                 <ul class="row justify-content-center">
                     @foreach($categories as $categorie)
                         <li><a href="{{route("selectCategorie",["id"=>$categorie->id])}}">{{$categorie->name}}</a></li>
+                        @if(Auth::user()->IsAdmin == true)
+                            <form action="{{route("deleteCat")}}" method="post">
+                                @method("DELETE")
+                                @csrf
+
+                                <input type="hidden" value="{{$categorie->id}}" name="idcat">
+                                <button type="submit" style="border:solid;background-color: red;">Supprimer</button>
+
+                            </form>
+                        @endif
                     @endforeach
                 </ul>
-                <!-- Portfolio Item 1-->
-                <!--
-                <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal1">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/cabin.png" alt="..." />
-                    </div>
-                </div>
 
-                <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal2">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/cake.png" alt="..." />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-5">
-                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal3">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/circus.png" alt="..." />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-5 mb-lg-0">
-                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal4">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/game.png" alt="..." />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-5 mb-md-0">
-                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal5">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/safe.png" alt="..." />
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal6">
-                        <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
-                            <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
-                        </div>
-                        <img class="img-fluid" src="assets/img/portfolio/submarine.png" alt="..." />
-                    </div>
-                </div>
-                -->
             </div>
         </div>
     </section>
 
     <!-- Contact Section-->
-    <?php if ($IsAdmin == 0): ?>
+    <?php if (Auth::user()->IsAdmin== 0): ?>
     <section class="page-section" id="contact">
         <div class="container">
             <!-- Contact Section Heading-->
@@ -147,13 +97,7 @@
             <!-- Contact Section Form-->
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-xl-7">
-                    <!-- * * * * * * * * * * * * * * *-->
-                    <!-- * * SB Forms Contact Form * *-->
-                    <!-- * * * * * * * * * * * * * * *-->
-                    <!-- This form is pre-integrated with SB Forms.-->
-                    <!-- To make this form functional, sign up at-->
-                    <!-- https://startbootstrap.com/solution/contact-forms-->
-                    <!-- to get an API token!-->
+
                     <form id="contactForm" data-sb-form-api-token="API_TOKEN">
                         <!-- Name input-->
                         <div class="form-floating mb-3">
@@ -206,7 +150,7 @@
     </section>
     <?php
     endif;
-    if ($IsAdmin == 1):
+    if (Auth::user()->IsAdmin == 1):
     ?>
     <section class="page-section" id="contact">
         <div class="container">

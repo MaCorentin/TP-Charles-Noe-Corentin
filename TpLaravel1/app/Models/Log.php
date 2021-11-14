@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Log extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 
     public function users(){
         return $this->belongsTo(user::class);

@@ -23,11 +23,14 @@ Route::post('/articlecreate', [\App\Http\Controllers\ArticlesController::class, 
 
 Route::post('/commentairecreate', [\App\Http\Controllers\CommentaireController::class, 'store'])->name("commentairecreate");
 Route::post('/notecreate', [\App\Http\Controllers\NoteController::class, 'store'])->name("notecreate");
-Route::post('/article', [\App\Http\Controllers\commentaireController::class, 'store'])->name("notecreate");
 
 
 Route::get("/categorie/{id}", [\App\Http\Controllers\ArticlesController::class, "index"])->name("articles");
 
 Route::get('/categorie/{id}', [\App\Http\Controllers\CategorieController::class, 'getone'])->name("selectCategorie");
 Route::get('/article/{id}', [\App\Http\Controllers\ArticlesController::class, 'getone'])->name("selectArticle");
+
+Route::delete('/commentaire/delete',[\App\Http\Controllers\CommentaireController::class, 'destroy'])->name("deleteComm");
+Route::delete('/categorie/delete',[\App\Http\Controllers\CategorieController::class, 'destroy'])->name("deleteCat");
+Route::delete('/article/delete',[\App\Http\Controllers\ArticlesController::class, 'destroy'])->name("deleteArticle");
 require __DIR__.'/auth.php';

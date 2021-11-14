@@ -1,11 +1,4 @@
-<?php
 
-
-$user = Auth::user();
-$IsAdmin = Auth::user()->IsAdmin;
-$id = Auth::id();
-
-?>
 
 
 <x-app-layout>
@@ -16,7 +9,7 @@ $id = Auth::id();
     </x-slot>
     <nav class="row" id="mainNav">
         <div class="container">
-            <a class="navbar-brand" href="#page-top">Tp De BRICE</a>
+            <a class="navbar-brand" href="{{route("dashboard")}}">Tp De BRICE</a>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
                     <form method="POST" action="{{ route('logout') }}">
@@ -28,12 +21,12 @@ $id = Auth::id();
                                 {{ __('Déconnexion') }}
                             </a></li>
                     </form>
-                    <?php if ($IsAdmin == 1): ?>
+                    <?php if (Auth::user()->IsAdmin == 1): ?>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">Admin</a></li>
                     <?php endif; ?>
 
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#categorie">categorie</a></li>
-                    <?php if ($IsAdmin == 0): ?>
+                    <?php if (Auth::user()->IsAdmin == 0): ?>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="#contact">Contact</a></li>
                     <?php endif; ?>
                 </ul>
@@ -47,6 +40,16 @@ $id = Auth::id();
         @foreach($articles as $article)
             @if($article->CategoryID == $categorie->id)
             <a href="{{route("selectArticle",["id"=>$article->id])}}"><p>Nom de l'article : {{$article->name}} <br/>Description : {{$article->description}}<br/> <br/></p></a>
+                @if(Auth::user()->IsAdmin == true)
+                    <form action="{{route("deleteArticle")}}" method="post">
+                        @method("DELETE")
+                        @csrf
+
+                        <input type="hidden" value="{{$article->id}}" name="idArt">
+                        <button type="submit" style="border:solid;background-color: red;">Supprimer</button>
+
+                    </form>
+                @endif
             @endif
         @endforeach
 

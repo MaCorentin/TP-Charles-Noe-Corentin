@@ -16,7 +16,7 @@ $id = Auth::id();
     </x-slot>
     <nav class="row" id="mainNav">
         <div class="container">
-            <a class="navbar-brand" href="#page-top">Tp De BRICE</a>
+            <a class="navbar-brand" href="{{route("dashboard")}}">Tp De BRICE</a>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
                     <form method="POST" action="{{ route('logout') }}">
@@ -43,7 +43,7 @@ $id = Auth::id();
     </nav>
     <br/>
     <div>
-        <h1><strong>NOM DE L'ARTICLE : {{$article->name}}</strong></h1>
+        <h1><strong>NOM DE L'ARTICLE : {{$article->name}}</strong></h1><p>Note : {{$MoyenneNote}}/5</p>
         <p>DESCRIPTION : {{$article->description}}</p>
         <form method="POST" action="{{route("commentairecreate")}}" style="background-color:#E02525;">
             @csrf
@@ -66,11 +66,25 @@ $id = Auth::id();
         </form>
         @foreach ($commentaires as $commentaire)
             @foreach($users as $user)
-                @if($user->id == $commentaire->UserID)
-                    <p>Commentaire de  : {{$user->name}}</p>
+                @if($article->id == $commentaire->ArticleID)
+                    @if($user->id == $commentaire->UserID)
+
+                        <p>Commentaire de  : {{$user->name}}</p>
+                        <p class="d-inline">{{$commentaire->text}}</p>
+                        @if(Auth::user()->IsAdmin == true)
+                            <form action="{{route("deleteComm")}}" method="post">
+                                @method("DELETE")
+                                @csrf
+
+                                <input type="hidden" value="{{$commentaire->id}}" name="idcom">
+                                <button type="submit" style="border:solid;background-color: red;">Supprimer</button>
+
+                            </form>
+                        @endif
+                    @endif
                 @endif
             @endforeach
-            <p>{{$commentaire->text}}</p>
+
         @endforeach
 
     </div>

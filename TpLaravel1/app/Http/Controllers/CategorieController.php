@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categorie;
+use App\Models\Commentaire;
+use App\Models\Log;
+use App\Models\Note;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use Illuminate\Support\Facades\Auth;
@@ -51,6 +54,12 @@ class CategorieController extends Controller
             "updated_by" => Auth::user()->id
         ]);
 
+        Log::create([
+            "name" => "CREATION CATEGORIE",
+            "text" => "Ajout : ".$request->nCate,
+            "UserID" => Auth::user()->id
+        ]);
+
         return back();
     }
 
@@ -94,9 +103,18 @@ class CategorieController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+
+        Categorie::find($request->idcat)->delete();
+        Log::create([
+            "name" => "SUPPRESSION Categorie",
+            "text" => "Suppression de la catégorie n° : ".$request->idcat,
+            "UserID" => Auth::user()->id
+        ]);
+
+
+        return back();
     }
     /**
     *

@@ -18,7 +18,7 @@ class ArticleSeeder
         DB::table('article')->insert([
             'name' => Str::random(10),
             'description' => 'admin@gmail.com',
-            'category' => Hash::make('password'),
+            'categoryID' => Hash::make('password'),
             'IsAdmin' => true
         ]);
     }

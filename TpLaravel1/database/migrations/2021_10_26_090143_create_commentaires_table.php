@@ -17,8 +17,11 @@ class CreateCommentairesTable extends Migration
             $table->id('id');
             $table->string('text');
             $table->bigInteger('UserID')->unsigned();
+            $table->bigInteger("ArticleID")->unsigned();
             $table->timestamps();
             $table->foreign('UserID')->references('id')->on('users');
+            $table->foreign('ArticleID')->references('id')->on('articles');
+
         });
     }
 

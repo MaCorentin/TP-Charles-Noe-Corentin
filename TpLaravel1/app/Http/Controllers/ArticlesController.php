@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\Categorie;
+use App\Models\Log;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Article;
@@ -41,6 +42,12 @@ class ArticlesController
             "CategoryID" => $request->idCat,
             "UserCreateID" => Auth::user()->id,
             "LastModifyUserID" => Auth::user()->id
+        ]);
+
+        Log::create([
+            "name" => "CREATION ARTICLE",
+            "text" => "Ajout : ".$request->nArt,
+            "UserID" => Auth::user()->id
         ]);
 
         return back();
@@ -86,20 +93,21 @@ class ArticlesController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
-    }
-    /**
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function getAllArticleWhere($id){
-        $article = Article::find($id);
+        Note::where('ArticleID', '=', $request->idArt)->delete();
+        Commentaire::where('ArticleID', '=', $request->idArt)->delete();
+        Article::find($request->idArt)->delete();
 
-        return view("categorie", compact("categorie"));
+        Log::create([
+            "name" => "SUPPRESSION ARTICLE",
+            "text" => "Suppression du article n° : ".$request->idArt,
+            "UserID" => Auth::user()->id
+        ]);
+
+        return back();
     }
+
 
     /**
      *
@@ -109,8 +117,24 @@ class ArticlesController
     public function getone($id){
         $article = Article::find($id);
         $notes = Note::all();
+        $i=0;$somme=0;$MoyenneNote=0;
+
+        foreach ($notes as $note) {
+            if ($note->ArticleID == $id)
+            {
+                $somme += $note->note;
+                $i++;
+            }
+
+        }
+        if($i>0)
+        {
+            $MoyenneNote = $somme/$i;
+        }
+
         $commentaires = Commentaire::all();
         $users = User::all();
-        return view("article", compact( "article", "notes", "commentaires","users"));
+
+        return view("article", compact( "article", "notes", "commentaires","users","MoyenneNote"));
     }
 }

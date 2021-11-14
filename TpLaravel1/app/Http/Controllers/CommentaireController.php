@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commentaire;
+use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,6 +35,14 @@ class CommentaireController
         Commentaire::create([
             "text" => $request->cText,
             "UserID" => Auth::user()->id,
+            "ArticleID" => $request->nid
+
+        ]);
+
+        Log::create([
+            "name" => "CREATION COMMENTAIRE",
+            "text" => "Ajout : ".$request->cText,
+            "UserID" => Auth::user()->id
         ]);
 
         return back();
@@ -79,9 +88,15 @@ class CommentaireController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        Commentaire::find($request->idcom)->delete();
+        Log::create([
+            "name" => "SUPPRESSION COMMENTAIRE",
+            "text" => "Suppression du commentaire n° : ".$request->idcom,
+            "UserID" => Auth::user()->id
+        ]);
+        return back();
     }
 
 
